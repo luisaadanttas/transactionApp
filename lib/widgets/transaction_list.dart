@@ -4,10 +4,12 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTx;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTx);
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return transactions.isEmpty
         ? Column(
             children: <Widget>[
@@ -19,6 +21,22 @@ class TransactionList extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/waiting.png',
                   fit: BoxFit.cover,
+=======
+    return Container(
+      height: 450,
+      child: transactions.isEmpty
+          ? Column(
+              children: <Widget>[
+                Text(('No Transactions added yet!'),
+                    style: Theme.of(context).textTheme.headline6),
+                SizedBox(height: 10),
+                Container(
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
+>>>>>>> 9156402b1e151123496f418afab4506836df2e27
                 ),
               ),
             ],
@@ -36,6 +54,16 @@ class TransactionList extends StatelessWidget {
                       child: FittedBox(
                           child: Text('\$${transactions[index].amount}')),
                     ),
+<<<<<<< HEAD
+=======
+                    subtitle: Text(
+                        DateFormat.yMMMd().format(transactions[index].date)),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                      onPressed: () => deleteTx(transactions[index].id),
+                    ),
+>>>>>>> 9156402b1e151123496f418afab4506836df2e27
                   ),
                   title: Text(
                     transactions[index].title,
