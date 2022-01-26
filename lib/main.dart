@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/widgets/chart.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/widgets/new_transaction.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 import 'models/transaction.dart';
 import 'package:intl/intl.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //WidgetsFlutterBinding.ensureInitialized();
+  //SystemChrome.setPreferredOrientations(
+  // [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -46,6 +52,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [];
 
+  bool _showChart = false;
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
@@ -81,25 +88,48 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      title:
+          Text('Personal Expenses', style: TextStyle(fontFamily: 'Open Sans')),
+      actions: <Widget>[
+        IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: Icon(Icons.add)),
+      ],
+    );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Personal Expenses',
-            style: TextStyle(fontFamily: 'Open Sans')),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () => _startAddNewTransaction(context),
-              icon: Icon(Icons.add)),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             //mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Chart(_recentTransactions),
-              TransactionList(_userTransactions),
+              Row(
+                children: <Widget>[
+                  Text('Show chart'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showChart = val;
+                        });
+                      }),
+                ],
+              ),
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.3,
+                      child: Chart(_recentTransactions))
+                  : Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height) *
+                          0.7,
+                      child: TransactionList(_userTransactions)),
             ],
           ),
         ),
